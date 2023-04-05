@@ -149,44 +149,36 @@ if (days < 365) {
 
 
 let m;
+if (day > 334 && day <= 366) m = 0;
+if (day > 0 && day <= 31) m = 1;
+if (day > 31  && day <= 59)  m = 2;
+if (day > 59  && day <= 90)  m = 3;
+if (day > 90  && day <= 120) m = 4;
+if (day > 121 && day <= 151) m = 5;
+if (day > 151 && day <= 181) m = 6;
+if (day > 181 && day <= 212) m = 7;
+if (day > 212 && day <= 243) m = 8;
+if (day > 243 && day <= 273) m = 9;
+if (day > 273 && day <= 304) m = 10;
+if (day > 304 && day <= 334) m = 11;
 
-if (day > 0 && day <= 31) m = 0;
-if (day > 31  && day <= 59)  m = 1;
-if (day > 59  && day <= 90)  m = 2;
-if (day > 90  && day <= 120) m = 3;
-if (day > 121 && day <= 151) m = 4;
-if (day > 151 && day <= 181) m = 5;
-if (day > 181 && day <= 212) m = 6;
-if (day > 212 && day <= 243) m = 7;
-if (day > 243 && day <= 273) m = 8;
-if (day > 273 && day <= 304) m = 9;
-if (day > 304 && day <= 334) m = 10;
-if (day > 334 && day <= 366) m = 11;
 
 
 switch (m) {
-    case(0): console.log("зима");
-    break;
+    case(0):
+    case(1):
     case(2): console.log("зима");
     break;
-    case(3): console.log("зима");
-    break;
-    case(4): console.log("весна");
-    break;
+    case(3):
+    case(4):
     case(5): console.log("весна");
     break;
-    case(6): console.log("весна");
-    break;
-    case(7): console.log("лето");
-    break;
+    case(6):
+    case(7):
     case(8): console.log("лето");
     break;
-    case(9): console.log("лето");
-    break;
-    case(10): console.log("осень");
-    break;
+    case(9):
+    case(10):
     case(11): console.log("осень");
-    break;
-    case(21): console.log("осень");
     break;
 }
