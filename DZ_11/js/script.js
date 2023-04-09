@@ -131,7 +131,7 @@ let enterNumber,
         if (enterNumber == 0) {
             break;
         } else if (isNaN(enterNumber)) {
-            console.log("Вы ввели не число, попробуйте еще раз!")
+            alert("Вы ввели не число, попробуйте еще раз!")
             continue;
         }
         counter++;
