@@ -337,166 +337,73 @@ c. после последней точки и после @, домен верх
 //Не реализовал только проверку на допустимые специальные символы, т.е. функция не проверяет email на такие как символы * / \ & и т.д.
 
 function checkEmail(email) {
-    let firstChar = email.charAt(0),
-        lastChar = email.charAt(email.length - 1),
-        checkResult = true,
-        loverEmail = email.toLowerCase();
 
-    function checkFirstChar() {
-        switch (firstChar) {
-            case("."):
-            case("@"):
-            case("_"):
-            case("-"):
-            case("."): checkResult = false;
+    if (typeof email === 'undefined') return null; //если ничего не передали возвращаем null
+    if (typeof email !== 'string' || email.indexOf('@') === -1) return false; //если строка или нету @ то возвращаем false
+
+    let emailParts = email.split('@'), // делим email на две части до @ после
+        emailName = emailParts[0],
+        emailDomain = emailParts[1],
+        emailDomainParts = emailDomain.split('.'),
+        validChars ='abcdefghijklmnopqrstuvwxyz.0123456789_-',
+        loverEmail = email.toLowerCase(),
+        checkResult = true;
+
+        if (emailParts.length > 2) {
+            console.log("Нельзя использовать @@ ");
+            return false;
         }
 
-        console.log("cheackFirstChar = " + checkResult);
-        return checkResult;
-    }
-
-    function checkLastChar() {
-        switch (lastChar) {
-            case("."):
-            case("@"):
-            case("_"):
-            case("-"):
-            case("."): checkResult = false;
+        if (emailName.length < 3 || emailDomainParts[0].length < 2 || emailDomainParts[0].length > 11 || emailDomainParts[1].length > 3) {
+            console.log("неверная длинна email");
+            return false;
         }
 
-        console.log("checkLastChar = " + checkResult);
-        return checkResult;
-    }
+        if (checkFirstLastChar(emailName) == false || checkFirstLastChar(emailDomainParts[0]) == false || checkFirstLastChar(emailDomainParts[1]) == false) {
+            console.log("email не должен начинаться с символов или заканчиваться или сиволы идти подряд друг за другом");
+            return false;
+        }
 
-    function checkDoubleChar() {
-        let double; // создаем строку для проверки с первым символом
-        let checkResult = true;
-
-        for (let i = 0; i < email.length - 2; i++) {
-            if (checkResult) {
-                double = email.slice(i, i + 2); // добавляем второй символ к вышесозданной строке, затем проверям на дабл символы
-                switch (double) {
-                    case(".."):
-                    case("@."):
-                    case(".@"):
-                    case("@@"):
-                    case("_@"):
-                    case("@_"):
-                    case("-@"):
-                    case("@-"):
-                    case("--"):
-                    case("__"):
-                    checkResult = false;
-                    break;
-                }
-             
-            double[0] = email[i];
-            } else {
-                break;
+        for (let i = emailName.length - 1; i >= 0; i--) {
+            if (validChars.indexOf(emailName[i]) < 0) {
+                console.log("Неверные сиволы в имени email");
+                return false;
             }
+        }
 
-            
+        for (let i = emailDomain.length - 1; i >= 0; i--) {
+            if (validChars.indexOf(emailDomain[i]) < 0) {
+                console.log("Неверные сиволы в домене email");
+                return false;
+            }
+        }
+
+
+        //функция на проверку первого символа
+    function checkFirstLastChar(emailParts) {
+            switch (emailParts.charAt(0)) {
+                case("."):
+                case("@"):
+                case("_"):
+                case("-"):
+                case("."): 
+                checkResult = false;
+            }
+            switch (emailParts.charAt(emailParts.length - 1)) {
+                case("."):
+                case("@"):
+                case("_"):
+                case("-"):
+                case("."): 
+                checkResult = false;
+            }
+            return checkResult;
             
         }
-        console.log("cheackDoubleChar = " + checkResult);
-        return checkResult;
-    }
         
-    function checkTochkaName() {
-        let counter = 0; //счетчик точек
-        let i = 0;
-        while(email[i] != "@") {
-            if (email[i] == ".") {
-                counter++;
-            }
-            i++;
-
-            if (counter > 1) {
-                checkResult = false;
-                break;
-            }
-        }
-
-        console.log("cheackTochkaName = " + checkResult);
-        return checkResult;
-    }
-
-    function checkDomen() {
-        counter = 0;
-        let i = email.length - 1;
-        while (email[i] != ".") {
-            counter++;
-            i--;
-        }
-
-        if (counter < 2 || counter > 11) {
-            checkResult = false;
-        }
-
-        console.log("checkDomen = " + checkResult);
-        return checkResult;
-    }
-
-    function checkCyrylic() {
-        let char;
-        for (let i = 0; i < loverEmail.length; i++) {
-            char = loverEmail[i];
-            switch (char) {
-                case("а"):
-                case("б"):
-                case("в"):
-                case("г"):
-                case("д"):
-                case("е"):
-                case("ё"):
-                case("ж"):
-                case("з"):
-                case("и"):
-                case("й"):
-                case("к"):
-                case("л"):
-                case("м"):
-                case("н"):
-                case("о"):
-                case("п"):
-                case("р"):
-                case("с"):
-                case("у"):
-                case("ф"):
-                case("х"):
-                case("ц"):
-                case("ч"):
-                case("ш"):
-                case("щ"):
-                case("э"):
-                case("ю"):
-                case("я"):
-                checkResult = false;
-                break;
-
-            }
-        }
-        console.log("checkCyrylic = " + checkResult);
-        return checkResult;
-    }
-    
-    if (!checkFirstChar()) {
-        return "Первый символ может начинаться только с буквы";
-    } else if (!checkLastChar()) {
-        return "Последний символ может быть только буквой!";
-    } else if (!checkDoubleChar()) {
-        return "У вас запрещенный порядок символов «.@» или «@@», «_@», «@-», «--» и т.п";
-    } else if (!checkTochkaName()) {
-        return "В имени email может быть только одна точка";
-    } else if (!checkDomen()) {
-        return "домен может быть более 2-х символов и не более 11";
-    } else if (!checkCyrylic()) {
-        return "В имейле нельзя использовать кирилицу!";
-    } else 
+        
     return "Ваш имейл подходит!"
 
-    
-
     }
     
-console.log(checkEmail("mol_xs@MediaList.ru"));
+console.log(checkEmail("molxs_@mail.ru"));
