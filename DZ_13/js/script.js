@@ -334,7 +334,6 @@ b. имя эл. почты (до знака @) должно быть длино�
 c. после последней точки и после @, домен верхнего уровня (ru, by, com и 
 т.п.) не может быть длиной менее 2 и более 11 символов*/
 
-//Не реализовал только проверку на допустимые специальные символы, т.е. функция не проверяет email на такие как символы * / \ & и т.д.
 
 function checkEmail(email) {
 
@@ -345,8 +344,7 @@ function checkEmail(email) {
         emailName = emailParts[0],
         emailDomain = emailParts[1],
         emailDomainParts = emailDomain.split('.'),
-        validChars ='abcdefghijklmnopqrstuvwxyz.0123456789_-',
-        loverEmail = email.toLowerCase(),
+        validChars ='abcdefghijklmnopqrstuvwxyz.0123456789_-', //допустимые символы
         checkResult = true;
 
         if (emailParts.length > 2) {
@@ -406,4 +404,4 @@ function checkEmail(email) {
 
     }
     
-console.log(checkEmail("molxs_@mail.ru"));
+console.log(checkEmail("Molxs@mail.ru"));
