@@ -199,8 +199,8 @@ let height = 10,              //высота треугольника
     for (let i = 0; i < arr11.length; i++) {
         let j = i;
         while (j < height - 1) {
-            arr11[i][maxIndex - height + 1 + j] = "  ";
-            arr11[i][maxIndex - height - 1 - j] = "  ";
+            arr11[i][maxIndex - height + 1 + j] = " ";
+            arr11[i][maxIndex - height - 1 - j] = " ";
             j++;
         }
         
