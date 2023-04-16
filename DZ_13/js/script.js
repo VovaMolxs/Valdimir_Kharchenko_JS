@@ -340,6 +340,7 @@ function checkEmail(email) {
     if (typeof email === 'undefined') return null; //если ничего не передали возвращаем null
     if (typeof email !== 'string' || email.indexOf('@') === -1) return false; //если строка или нету @ то возвращаем false
 
+    
     let emailParts = email.split('@'), // делим email на две части до @ после
         emailName = emailParts[0],
         emailDomain = emailParts[1],
