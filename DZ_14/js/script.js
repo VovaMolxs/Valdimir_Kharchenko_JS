@@ -62,19 +62,22 @@ console.log(c);
 перед днями и месяцами, которые состоят из одной цифры (из 1.9.2014 
 сделает 01.09.2014).*/
 
+//лично я не понял какую функция писать? если по умолчанию выводится дата как надо
+
 let dateNow = new Date();
 dateNow.setDate('1', '9', '2014');
-let opt = {
+let time = {
     hour: 'numeric',
     minute: 'numeric',
     second: 'numeric',
+}
+let dat = {
     day: 'numeric',
     month: 'numeric',
     year: 'numeric'
-
 }
 
-console.log(dateNow.toLocaleString('ru', opt));
+console.log(dateNow.toLocaleString('ru', time) + ' ' + dateNow.toLocaleString('ru', dat));
 
 
 /*
@@ -146,11 +149,7 @@ function disassemblyURL(URL) {
         params = url.match(/\?[a-z_=&0-9]+/),
         hesh = url.match(/#[a-z0-9]+/);
 
-        
-
-    return array.concat(domen,params,hesh);
-        
-    
+        return array.concat(domen,params,hesh);
 }
 
 console.log(disassemblyURL(url));
