@@ -119,7 +119,7 @@ console.log(checkNumber(str8));
 Функция должна возвращать true или false. Используйте регулярные 
 выражения.*/
 
-let email = 'molxs12@mai_fdf.ru';
+let email = 'molxs@mail.ru';
 
 function checkEmail(email) {
     let reg =/^([a-z0-9]+)@{1}([a-z0-9]+([_-]{0,1})).[a-z]{2,11}/;
