@@ -1,3 +1,28 @@
+/*
+Подобие текстовой рпг, которую можно расширять и дорабатывать.
+
+Хотел создать абстрактный класс, объект которого нельзя создавать, но погуглив понял что как таковых абстрактных классов тут нет, аоэтому сделал класс, который имеет все основные свойства и иетоды, и далее создал другие классы которые его наследники.
+
+Что игра умеет. Можно создать объекты трех классов, Воин, Маг и Лучник. Свойства которых, за исключением имени, заданы по умолчанию в конструкторе. 
+Так же можно создать, пати(объединение игроков), в которое можно добавить наши созданные объекты классов(воина, мага и лучника).
+Так же создал подземелье, которое можно наполнить объектами классов (скелет и некромант). 
+Классы скилет и некромант наследуют все свойства и методы класса Монстер.
+
+Дальше можно пати игроков отправить проходить данж, игроки бьют монстров в данже, а монстры бьют игроков в ответ.
+Есть немного проверок в методах, но они не совершенны и их надо по уму доработать.
+
+Что бы еще хотелось добавить:
+1. Тип атаки для разных классов
+2. Защиту
+3. Класс целитель, который будет хилить. (Методы для хила я написал)
+4. Дроп предметов из данжа
+5. Крит атаки, увороты, промахи и т.п.
+6. Систему уровней персонажей, которая будет повышать характеристики с новым уровнем
+
+и многое многое другое.
+
+*/
+
 class CharacterClass {
 
    #name;
@@ -90,9 +115,13 @@ class CharacterClass {
 
 
    attack(targetAttack){
-      targetAttack.loseHealth(this.getAttackAmount);
-      console.log(this.#name + " Аттакует " + targetAttack.getName + " и наносит " + this.getAttackAmount + " урона\n" + 
-      " Здоровье цели " + targetAttack.getHealthPoints);
+      if (this.getHealthPoints > 0) {
+         targetAttack.loseHealth(this.getAttackAmount);
+      console.log(this.#name + " " + this.#healthPoints + " HP " + " Аттакует " + targetAttack.getName + " на " + this.getAttackAmount + " урона" + " " + targetAttack.getHealthPoints + " HP");
+      } else {
+         console.log("Цель убита!")
+         return;
+      }
       
    };
    restoreHealth(amount) {
@@ -187,8 +216,7 @@ class MonsterClass {
    attack(targetAttack){
       if (this.getHealthPoints > 0) {
          targetAttack.loseHealth(this.getAttackAmount);
-      console.log(this.#name + " Аттакует " + targetAttack.getName + " и наносит " + this.getAttackAmount + " урона\n" + 
-      " Здоровье цели " + targetAttack.getHealthPoints);
+      console.log(this.#name + " " + this.#healthPoints + " HP " + " Аттакует " + targetAttack.getName + " на " + this.getAttackAmount + " урона" + " " + targetAttack.getHealthPoints + " HP");
       } else {
          console.log("Цель убита!")
          return;
@@ -362,7 +390,7 @@ class Skeletons extends MonsterClass {
       this.setLevel = 1;
       this.setMaxHealthPoints = 50;
       this.setHealthPoints = 50;
-      this.setAttackAmount = 2;
+      this.setAttackAmount = 4;
    }
 }
 
@@ -373,7 +401,7 @@ class Necromancer extends MonsterClass {
       this.setLevel = 1;
       this.setMaxHealthPoints = 30;
       this.setHealthPoints = 30;
-      this.setAttackAmount = 5;
+      this.setAttackAmount = 7;
    }
 }
 
@@ -387,10 +415,10 @@ party.inviteParty(new Mage("Gendalf"));
 party.info();
 
 let dungeon = new Dungeon("Красная пещера!"); //Создаем подземелье и добавляем туда монстров
-dungeon.addMonsterDungeon(new Skeletons('Скелет 1'));
-dungeon.addMonsterDungeon(new Skeletons('Скелет 2'));
-dungeon.addMonsterDungeon(new Necromancer('Некромант 1'));
-dungeon.addMonsterDungeon(new Necromancer('Некромант 2'));
+dungeon.addMonsterDungeon(new Skeletons('Скелет Кровожадный'));
+dungeon.addMonsterDungeon(new Skeletons('Скелет Лучник'));
+dungeon.addMonsterDungeon(new Necromancer('Некромант Одноглазый'));
+dungeon.addMonsterDungeon(new Necromancer('Некромант Гниющий'));
 dungeon.info();
 
 
