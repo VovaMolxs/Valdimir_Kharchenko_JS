@@ -3,12 +3,16 @@
 
 Хотел создать абстрактный класс, объект которого нельзя создавать, но погуглив понял что как таковых абстрактных классов тут нет, аоэтому сделал класс, который имеет все основные свойства и иетоды, и далее создал другие классы которые его наследники.
 
-Что игра умеет. Можно создать объекты трех классов, Воин, Маг и Лучник. Свойства которых, за исключением имени, заданы по умолчанию в конструкторе. 
-Так же можно создать, пати(объединение игроков), в которое можно добавить наши созданные объекты классов(воина, мага и лучника).
-Так же создал подземелье, которое можно наполнить объектами классов (скелет и некромант). 
+Что игра умеет: 
+1. Можно создать объекты трех классов, Воин, Маг и Лучник. Свойства которых, за исключением имени, заданы по умолчанию в конструкторе. 
+2. Так же можно создать, пати(объединение игроков), в которое можно добавить наши созданные объекты классов(воина, мага и лучника).
+3. Так же создал подземелье, которое можно наполнить объектами классов (скелет и некромант). 
 Классы скилет и некромант наследуют все свойства и методы класса Монстер.
-
+4. Можно заставить пати проходить подземелье. 
+Если пати меньше 3-х игроков, то мы не сможем войти в подземелье.
+Игроки начинают бить монстров по очереди, и монстры бьют игроков в ответ(работает криво, но я пытаюсь придумать нормальную логику)
 Дальше можно пати игроков отправить проходить данж, игроки бьют монстров в данже, а монстры бьют игроков в ответ.
+
 Есть немного проверок в методах, но они не совершенны и их надо по уму доработать.
 
 Что бы еще хотелось добавить:
@@ -23,6 +27,15 @@
 
 */
 
+/*взял рандомайзер в гугле, для использования генерации критической аттаки
+function getRandomInRange(min, max) {
+   return Math.floor(Math.random() * (max - min + 1)) + min;
+ }
+
+ if (this.getCritChance >= getRandomInRange(0, this.getCritChance)) {
+            this.#attackAmount = attackAmount + attackAmount*this.getCritRate;
+         }
+*/
 class CharacterClass {
 
    #name;
@@ -32,8 +45,10 @@ class CharacterClass {
    #attackAmount;
    #maxHealthPoints;
    #maxManaPoints;
+   #critChance;
+   #critRate;
 
-   constructor (name, level, maxHealthPoints, maxManaPoints, healthPoints, manaPoints, attackAmount) {
+   constructor (name, level, maxHealthPoints, maxManaPoints, healthPoints, manaPoints, attackAmount, critChance, critRate) {
       this.#name = name;
       this.#level = level;
       this.#maxHealthPoints = maxHealthPoints;
@@ -41,6 +56,8 @@ class CharacterClass {
       this.#healthPoints = healthPoints;
       this.#manaPoints = manaPoints;
       this.#attackAmount = attackAmount;
+      this.#critChance = critChance;
+      this.#critRate = critRate;
       
    }
    
@@ -94,7 +111,9 @@ class CharacterClass {
    set setAttackAmount(attackAmount) {
       if (attackAmount < 0) {
          console.log("Вы не можете аттаковать меньше нуля!")
-      } else this.#attackAmount = attackAmount;
+      } else {
+         this.#attackAmount = attackAmount;
+      }
    }
 
    get getMaxHealthPoints() {
@@ -113,16 +132,37 @@ class CharacterClass {
       this.#maxManaPoints = maxManaPoints;
    }
 
+   get getCritChance() {
+      return this.#critChance;
+   }
+
+   set setCritChance(critChance) {
+      this.#critChance = critChance;
+   }
+
+   get getCritRate() {
+      return this.#critRate;
+   }
+
+   set setCritRate(critRate) {
+      this.#critRate = this.#critRate
+   }
 
    attack(targetAttack){
-      if (this.getHealthPoints > 0) {
-         targetAttack.loseHealth(this.getAttackAmount);
-      console.log(this.#name + " " + this.#healthPoints + " HP " + " Аттакует " + targetAttack.getName + " на " + this.getAttackAmount + " урона" + " " + targetAttack.getHealthPoints + " HP");
-      } else {
-         console.log("Цель убита!")
-         return;
-      }
       
+
+      if (this.#healthPoints < 1) {
+         console.log("Мертвый не может аттаковать!");
+      } else if (targetAttack.getHealthPoints < 1) {
+         console.log("Цель мертва, а значит ее нельзя аттаковать!");
+      } else {
+         console.log(this.getName + " " + this.#healthPoints + " HP, собирается аттаковать " + targetAttack.getName  + " " + targetAttack.getHealthPoints + " HP");
+         targetAttack.loseHealth(this.getAttackAmount);
+         console.log(this.#name + " Аттакует " + targetAttack.getName + " на " + this.getAttackAmount + " урона");
+         if(targetAttack.getHealthPoints == 0) {
+            console.log(this.#name + " убил " + targetAttack.getName)
+         }
+      }    
    };
    restoreHealth(amount) {
       this.setHealthPoint = this.#healthPoints + amount;
@@ -153,13 +193,15 @@ class MonsterClass {
    #level;
    #attackAmount;
    #maxHealthPoints;
+   #critRate
 
-   constructor (name, level, maxHealthPoints, healthPoints, attackAmount) {
+   constructor (name, level, maxHealthPoints, healthPoints, attackAmount, critRate) {
       this.#name = name;
       this.#level = level;
       this.#maxHealthPoints = maxHealthPoints;
       this.#healthPoints = healthPoints;
       this.#attackAmount = attackAmount;
+      this.#critRate = critRate;
       
    }
    
@@ -213,15 +255,28 @@ class MonsterClass {
       this.#maxHealthPoints = maxHealthPoints;
    }
 
+   get getCritRate() {
+      return this.getCritRate;
+   }
+
+   set setCritRate(critRate) {
+      this.#critRate = critRate;
+   }
+
    attack(targetAttack){
-      if (this.getHealthPoints > 0) {
-         targetAttack.loseHealth(this.getAttackAmount);
-      console.log(this.#name + " " + this.#healthPoints + " HP " + " Аттакует " + targetAttack.getName + " на " + this.getAttackAmount + " урона" + " " + targetAttack.getHealthPoints + " HP");
+      if (this.#healthPoints < 1) {
+         console.log("Мертвый не может аттаковать!");
+      } else if (targetAttack.getHealthPoints < 1) {
+         console.log("Цель мертва, а значит ее нельзя аттаковать!");
       } else {
-         console.log("Цель убита!")
-         return;
-      }
-      
+         console.log(this.getName + " " + this.#healthPoints + " HP, собирается аттаковать " + targetAttack.getName  + " " + targetAttack.getHealthPoints + " HP");
+         targetAttack.loseHealth(this.getAttackAmount);
+         console.log(this.#name + " Аттакует " + targetAttack.getName + " на " + this.getAttackAmount + " урона");
+         if(targetAttack.getHealthPoints == 0) {
+            console.log(this.#name + " убил " + targetAttack.getName)
+         }
+      } 
+        
    };
    restoreHealth(amount) {
       this.setHealthPoints = this.#healthPoints + amount;
@@ -273,8 +328,17 @@ class Party {
       console.log("Проходим подземелье!");
       for (let i = 0; i < dungeon.getDungeonMonster.length; i++) {
          for(let j = 0; j < this.#partyMembers.length; j++) {
-            this.#partyMembers[j].attack(dungeon.getDungeonMonster[i]);
-            dungeon.getDungeonMonster[i].attack(this.#partyMembers[j]);
+           
+            if (this.#partyMembers[j].getHealthPoints > 0) {
+               this.#partyMembers[j].attack(dungeon.getDungeonMonster[i]);
+            }
+            
+            if (dungeon.getDungeonMonster[i].getHealthPoints > 0) {
+               dungeon.getDungeonMonster[i].attack(this.#partyMembers[j]);
+            }
+
+            console.log("----------------------------------------------"); 
+            
          }
       }
 
@@ -350,7 +414,9 @@ class Warrior extends CharacterClass {
       this.setMaxManaPoints = 50;
       this.setHealthPoints = 150;
       this.setManaPoints = 50;
-      this.setAttackAmount = 5;
+      this.setAttackAmount = 15;
+      this.critChance = 70;
+      this.critRate = 1;
       
    }
 }
@@ -364,7 +430,9 @@ class Mage extends CharacterClass {
       this.setMaxManaPoints = 100;
       this.setHealthPoints = 50;
       this.setManaPoints = 100;
-      this.setAttackAmount = 15;
+      this.setAttackAmount = 25;
+      this.critChance = 10;
+      this.critRate = 1;
       
    }
 }
@@ -374,11 +442,13 @@ class Archer extends CharacterClass {
       super(name);
       this.name = name;
       this.setLevel = 1;
-      this.setMaxHealthPoints = 75;
+      this.setMaxHealthPoints = 50;
       this.setMaxManaPoints = 70;
-      this.setHealthPoints = 75;
+      this.setHealthPoints = 50;
       this.setManaPoints = 70;
-      this.setAttackAmount = 10;
+      this.setAttackAmount = 15;
+      this.critChance = 10;
+      this.critRate = 1;
       
    }
 }
@@ -391,6 +461,8 @@ class Skeletons extends MonsterClass {
       this.setMaxHealthPoints = 50;
       this.setHealthPoints = 50;
       this.setAttackAmount = 4;
+      this.critChance = 10;
+      this.critRate = 1;
    }
 }
 
@@ -402,6 +474,8 @@ class Necromancer extends MonsterClass {
       this.setMaxHealthPoints = 30;
       this.setHealthPoints = 30;
       this.setAttackAmount = 7;
+      this.critChance = 10;
+      this.critRate = 1;
    }
 }
 
@@ -412,14 +486,16 @@ let party = new Party(); //Создаем пати
 party.inviteParty(new Warrior("Aragon")); //добавляем игоков в пати если два, то в подземелье не войдем
 party.inviteParty(new Archer("Legalaz"));
 party.inviteParty(new Mage("Gendalf"));
-party.info();
+//party.info(); //инфо по пати
+
+
 
 let dungeon = new Dungeon("Красная пещера!"); //Создаем подземелье и добавляем туда монстров
 dungeon.addMonsterDungeon(new Skeletons('Скелет Кровожадный'));
 dungeon.addMonsterDungeon(new Skeletons('Скелет Лучник'));
 dungeon.addMonsterDungeon(new Necromancer('Некромант Одноглазый'));
 dungeon.addMonsterDungeon(new Necromancer('Некромант Гниющий'));
-dungeon.info();
+//dungeon.info(); инфо по подземелью
 
 
 if (party.enterDungeon(dungeon)) {
