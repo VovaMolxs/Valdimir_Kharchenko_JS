@@ -508,22 +508,23 @@ class Necromancer extends MonsterClass {
 
 
 
-
 let party = new Party(); //Создаем пати
 party.inviteParty(new Warrior("Aragon")); //добавляем игоков в пати если два, то в подземелье не войдем
 party.inviteParty(new Archer("Legalaz"));
 party.inviteParty(new Mage("Gendalf"));
-//party.info(); //инфо по пати
-
-
+console.log("Создали пати, и наполнили его объектами персонажами: ");
+party.info(); //инфо по пати
+console.log("--------------------------------------------");
 
 let dungeon = new Dungeon("Красная пещера!", "Огромное подземелье находящееся в красной горе, из-за чего оно получило свое название. По легадам ходит слухи что в этом подземелье можно встретить разных опасных монстров. Говорят что многие зашедшие сюда, назад уже не вернулись..."); //Создаем подземелье и добавляем туда монстров
 dungeon.addMonsterDungeon(new Skeletons('Скелет Кровожадный'));
 dungeon.addMonsterDungeon(new Skeletons('Скелет Лучник'));
 dungeon.addMonsterDungeon(new Necromancer('Некромант Одноглазый'));
 dungeon.addMonsterDungeon(new Necromancer('Некромант Гниющий'));
-dungeon.info(); //инфо по подземелью
 
+console.log("Создали подземелье и наполнили его объектами монстрами: ")
+dungeon.info(); //инфо по подземелью
+console.log("--------------------------------------------")
 
 if (party.enterDungeon(dungeon)) {
    party.setDungeon = dungeon;
@@ -532,4 +533,5 @@ if (party.enterDungeon(dungeon)) {
    console.log("Пати не вошло в подземелье!");
 }
 
+console.log("информация о персонажах после боя")
 party.info();
