@@ -533,5 +533,5 @@ if (party.enterDungeon(dungeon)) {
    console.log("Пати не вошло в подземелье!");
 }
 
-console.log("информация о персонажах после боя")
+console.log("информация о персонажах после боя");
 party.info();
