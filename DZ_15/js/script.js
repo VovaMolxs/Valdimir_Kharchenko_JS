@@ -47,8 +47,9 @@ class CharacterClass {
    #maxManaPoints;
    #critChance;
    #critRate;
+   #killNPC;
 
-   constructor (name, level, maxHealthPoints, maxManaPoints, healthPoints, manaPoints, attackAmount, critChance, critRate) {
+   constructor (name, level, maxHealthPoints, maxManaPoints, healthPoints, manaPoints, attackAmount, critChance, critRate, killNPC) {
       this.#name = name;
       this.#level = level;
       this.#maxHealthPoints = maxHealthPoints;
@@ -58,6 +59,7 @@ class CharacterClass {
       this.#attackAmount = attackAmount;
       this.#critChance = critChance;
       this.#critRate = critRate;
+      this.#killNPC = killNPC;
       
    }
    
@@ -148,19 +150,26 @@ class CharacterClass {
       this.#critRate = this.#critRate
    }
 
-   attack(targetAttack){
-      
+   get getKillNPC() {
+      return this.#killNPC;
+   }
 
+   set setKillNPC(killNPC) {
+      this.#killNPC = killNPC;
+   }
+
+   attack(targetAttack){     
       if (this.#healthPoints < 1) {
          console.log("Мертвый не может аттаковать!");
       } else if (targetAttack.getHealthPoints < 1) {
          console.log("Цель мертва, а значит ее нельзя аттаковать!");
       } else {
-         console.log(this.getName + " " + this.#healthPoints + " HP, собирается аттаковать " + targetAttack.getName  + " " + targetAttack.getHealthPoints + " HP");
+         console.log(this.getName + " " + this.getHealthPoints + " HP, собирается аттаковать " + targetAttack.getName  + " " + targetAttack.getHealthPoints + " HP");
          targetAttack.loseHealth(this.getAttackAmount);
-         console.log(this.#name + " Аттакует " + targetAttack.getName + " на " + this.getAttackAmount + " урона");
+         console.log(this.getName + " Аттакует " + targetAttack.getName + " на " + this.getAttackAmount + " урона");
          if(targetAttack.getHealthPoints == 0) {
-            console.log(this.#name + " убил " + targetAttack.getName)
+            this.killNPC = this.killNPC + 1;
+            console.log(this.getName + " убил " + targetAttack.getName);
          }
       }    
    };
@@ -176,11 +185,16 @@ class CharacterClass {
    loseMana(amount) {
       this.setManaPoints = this.#manaPoints - amount;
    };
+
+   killerCounter(counter) {
+      this.setKillNPC = this.#killNPC + counter;
+   }
+
    levelUp() {
 
    };
    info() {
-      console.log("Имя " + this.#name + " Текущее ХП " + this.#healthPoints + " Текущее МП " + this.#manaPoints + " Левел = " + this.#level + " Сила атаки " + this.#attackAmount)
+      console.log("Имя " + this.#name + "\n" + "Текущее ХП " + this.#healthPoints + "\n" + "Текущее МП " + this.#manaPoints + "\n" + "Левел = " + this.#level + "\n" + "Сила атаки " + this.#attackAmount + "\n" + "Колличество убитых NPC " + this.killNPC);
    };
 
 
@@ -269,14 +283,13 @@ class MonsterClass {
       } else if (targetAttack.getHealthPoints < 1) {
          console.log("Цель мертва, а значит ее нельзя аттаковать!");
       } else {
-         console.log(this.getName + " " + this.#healthPoints + " HP, собирается аттаковать " + targetAttack.getName  + " " + targetAttack.getHealthPoints + " HP");
+         console.log(this.getName + " " + this.getHealthPoints + " HP, собирается аттаковать " + targetAttack.getName  + " " + targetAttack.getHealthPoints + " HP");
          targetAttack.loseHealth(this.getAttackAmount);
-         console.log(this.#name + " Аттакует " + targetAttack.getName + " на " + this.getAttackAmount + " урона");
+         console.log(this.getName + " Аттакует " + targetAttack.getName + " на " + this.getAttackAmount + " урона");
          if(targetAttack.getHealthPoints == 0) {
-            console.log(this.#name + " убил " + targetAttack.getName)
+            console.log(this.getName + " убил " + targetAttack.getName);
          }
-      } 
-        
+      }    
    };
    restoreHealth(amount) {
       this.setHealthPoints = this.#healthPoints + amount;
@@ -356,11 +369,37 @@ class Party {
 class Dungeon {
 
    #name;
+   #descriptionDungeon;
    #dungeonMonsters;
 
-   constructor(name) {
+   constructor(name, descriptionDungeon) {
       this.#name = name;
+      this.#descriptionDungeon = descriptionDungeon;
       this.#dungeonMonsters = [];
+   }
+
+   get getDungeonName() {
+      return this.#name;
+   }
+
+   set setDungeonName (name) {
+      this.#name = name;
+   }
+
+   get getDescriptionDungeon() {
+      return this.#descriptionDungeon;
+   }
+
+   set setDescriptionDungeon(descriptionDungeon) {
+      this.#descriptionDungeon = descriptionDungeon;
+   }
+
+   set setDungeonMonster (monster) {
+      this.#dungeonMonsters = monster;
+   }
+
+   get getDungeonMonster () {
+      return this.#dungeonMonsters;
    }
 
    open(party) {
@@ -380,24 +419,9 @@ class Dungeon {
       this.#dungeonMonsters.push(monster);
    }
 
-   get getDungeonName() {
-      return this.#name;
-   }
-
-   set setDungeonName (name) {
-      this.#name = name;
-   }
-
-   set setDungeonMonster (monster) {
-      this.#dungeonMonsters = monster;
-   }
-
-   get getDungeonMonster () {
-      return this.#dungeonMonsters;
-   }
-
 
    info() {
+      console.log("Информация о подземелье " + this.getDungeonName + "\n" + this.getDescriptionDungeon + "\n" + "Подземелье населяют следующие монстры:")
       for (let i = 0; i < this.#dungeonMonsters.length; i++) {
          this.#dungeonMonsters[i].info();
       }
@@ -417,6 +441,7 @@ class Warrior extends CharacterClass {
       this.setAttackAmount = 15;
       this.critChance = 70;
       this.critRate = 1;
+      this.killNPC = 0;
       
    }
 }
@@ -433,6 +458,7 @@ class Mage extends CharacterClass {
       this.setAttackAmount = 25;
       this.critChance = 10;
       this.critRate = 1;
+      this.killNPC = 0;
       
    }
 }
@@ -449,6 +475,7 @@ class Archer extends CharacterClass {
       this.setAttackAmount = 15;
       this.critChance = 10;
       this.critRate = 1;
+      this.killNPC = 0;
       
    }
 }
@@ -490,12 +517,12 @@ party.inviteParty(new Mage("Gendalf"));
 
 
 
-let dungeon = new Dungeon("Красная пещера!"); //Создаем подземелье и добавляем туда монстров
+let dungeon = new Dungeon("Красная пещера!", "Огромное подземелье находящееся в красной горе, из-за чего оно получило свое название. По легадам ходит слухи что в этом подземелье можно встретить разных опасных монстров. Говорят что многие зашедшие сюда, назад уже не вернулись..."); //Создаем подземелье и добавляем туда монстров
 dungeon.addMonsterDungeon(new Skeletons('Скелет Кровожадный'));
 dungeon.addMonsterDungeon(new Skeletons('Скелет Лучник'));
 dungeon.addMonsterDungeon(new Necromancer('Некромант Одноглазый'));
 dungeon.addMonsterDungeon(new Necromancer('Некромант Гниющий'));
-//dungeon.info(); инфо по подземелью
+dungeon.info(); //инфо по подземелью
 
 
 if (party.enterDungeon(dungeon)) {
@@ -505,3 +532,4 @@ if (party.enterDungeon(dungeon)) {
    console.log("Пати не вошло в подземелье!");
 }
 
+party.info();
