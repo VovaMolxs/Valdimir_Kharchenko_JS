@@ -1,0 +1,91 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+.main {
+    display: block;
+    margin: auto;
+    margin-top: 20px;
+    width: 30%;
+    background-color: rgb(124, 124, 124);
+    text-align: center;
+    border-radius: 15px;
+}
+
+.header {
+    padding-top: 20px;
+    border-radius: 15px;
+    background-color: aqua;
+}
+
+h2 {
+    margin-top: 10px;
+}
+
+.text-field {
+    padding-bottom: 20px;
+}
+
+.text-field__input {
+    width: 80%;
+    height: 40px;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #bdbdbd;
+    border-radius: 5px;
+}
+
+.task {
+    width: 80%;
+    margin-top: 20px;
+    margin-left: 30px;
+    text-align: left;
+    padding-bottom: 5px;
+
+}
+
+.task input {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+}
+
+.task p {
+    display: inline-block;
+    font-size: 24px;
+}
+
+img {
+    width: 20px;
+}
+
+input:checked + p {
+	color: green;
+    text-decoration: line-through;
+}
+
+button {
+    width: 300px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #aef5b8;
+    margin-bottom: 20px;
+}
+
+button:hover {
+    background-color: #f18c8c;
+}
+
+.task {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-but {
+    width: 50px;
+    margin: 0px;
+}
