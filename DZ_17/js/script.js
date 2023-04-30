@@ -28,7 +28,7 @@ if (value == "") {
             divTask.classList.add('task');
             div.append(divTask);
             divTask.insertAdjacentHTML('afterbegin', `<input type="checkbox" name="" id="">
-            <p id="text-${id}">${this.#tasks[this.#tasks.length - 1]}</p>
+            <p id="text-${this.#tasks.length-1}">${this.#tasks[this.#tasks.length - 1]}</p>
             <button class="edit-but" id="${this.#tasks.length-1}">Edit</button>`);
         }
     }
